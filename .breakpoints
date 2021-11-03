@@ -1,0 +1,48 @@
+{
+  "files": {
+    "http.js": [
+      {
+        "id": "4c5b0241-3179-42d3-9691-c19bf1f3352e",
+        "line": 234,
+        "version": 9539,
+        "index": 11257
+      }
+    ],
+    "index.html": [
+      {
+        "id": "dc19b19b-6175-4e92-9325-35c29220cead",
+        "line": 1,
+        "version": 12144,
+        "index": 0
+      },
+      {
+        "id": "dc413b7d-0792-47fb-beb6-3bfebc442003",
+        "line": 196,
+        "version": 12144,
+        "index": 5903
+      },
+      {
+        "id": "4bbf20ff-4d31-4e03-a1ab-c619d9bc068d",
+        "line": 274,
+        "version": 12144,
+        "index": 9199
+      }
+    ],
+    "index.js": [
+      {
+        "id": "57cf7b0a-f9cb-459e-82fe-6845bd37e1e4",
+        "line": 12,
+        "version": 600,
+        "index": 329
+      }
+    ],
+    "messages.json": [
+      {
+        "id": "2b60186f-6e2e-4843-84c2-47dfbd5e6a0e",
+        "line": 1,
+        "version": 20,
+        "index": 0
+      }
+    ]
+  }
+}

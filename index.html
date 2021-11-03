@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="shortcut icon" type="image/png" href="/favicon.png">
+		<title>Live Chat</title>
+		<script src="/cdn/lib/konva.min.js" type="text/javascript"></script>
+		<style>
+			/*Import Proxima Nova*/
+			@font-face {
+				font-family: 'proxima_nova_rgregular';
+				src: url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.eot');
+				src: url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.eot?#iefix') format('embedded-opentype'),
+					url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.woff') format('woff'),
+					url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.ttf') format('truetype'),
+					url('https://litmus.com/fonts/Emails/proximanova-regular-webfont.svg#proxima_nova_rgregular') format('svg');
+				font-weight: normal;
+				font-style: normal;
+			}
+			@font-face {
+				font-family: 'proxima_nova_rgbold';
+				src: url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.eot');
+				src: url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.eot?#iefix') format('embedded-opentype'),
+					url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.woff') format('woff'),
+					url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.ttf') format('truetype'),
+					url('https://litmus.com/fonts/Emails/proximanova-bold-webfont.svg#proxima_nova_rgbold') format('svg');
+				font-weight: normal;
+				font-style: normal;
+			}
+
+			@font-face {
+				font-family: 'adelle_rgregular';
+				src: url('https://litmus.com/fonts/Emails/adelle_reg-webfont.eot');
+				src: url('https://litmus.com/fonts/Emails/adelle_reg-webfont.eot?#iefix') format('embedded-opentype'),
+					url('https://litmus.com/fonts/Emails/adelle_reg-webfont.woff') format('woff'),
+					url('https://litmus.com/fonts/Emails/adelle_reg-webfont.ttf') format('truetype'),
+					url('https://litmus.com/fonts/Emails/adelle_reg-webfont.svg#adelle_rgregular') format('svg');
+				font-weight: normal;
+				font-style: normal;
+			}
+			/*Scrollbars*/
+			::-webkit-scrollbar {
+				width: 8px;
+				height: 90%;
+			}
+			::-webkit-scrollbar-thumb {
+				background-color: gray;
+				border-radius: 10px;
+			}
+			/*Main*/
+			button {
+				background-color: black;
+				border-radius: 8px;
+				border: none;
+				padding: 10px;
+				font-size: 16px;
+				cursor: pointer;
+			}
+			body: {
+				margin: 0px;
+			}
+			* {
+				font-family: "proxima_nova_rgregular", arial, helvetica, sans-serif;
+				user-select: none;
+				-webkit-user-select: none;
+				-webkit-user-drag: none;
+				-user-drag: none;
+				-ms-user-drag: none;
+				-o-user-drag: none;
+				padding: 0px;
+				margin: 0px;
+				overflow-wrap: break-word;
+				color: white;
+			}
+			h1, h2 {
+				text-align: center;
+				font-family: "proxima_nova_rgbold", arial, helvetica, sans-serif;
+			}
+			.lightblue {
+				color: lightblue
+			}
+			#chat-container {
+				position: fixed;
+				align-content: center;
+				width: 100%;
+				height: 100%;
+				background-color: rgb(25, 25, 25);
+				padding-left: 4%;
+				padding-right: 4%;
+			}
+			#msg-box {
+				border-radius: 15px;
+				padding-left: 5px;
+				padding-right: 5px;
+				border-width: 2px;
+				width: 75%;
+				height: 40px;
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				transform: translate(-50%, -150%);
+			}
+			input {
+				background-color: rgb(75, 75, 75);
+			}
+			input:focus {
+				outline: none;
+				box-shadow: 2px 2px 5px lightblue;
+			}
+			.msg {
+				padding: 12px;
+			}
+			#chat-messages {
+				overflow: scroll;
+				overflow-wrap: break-word;
+				width: 85.5%;
+				height: 75%;
+				padding-top: 2%;
+				margin-top: 25px;
+			}
+			a {
+				color: lightblue;
+			}
+			.good {
+				color: lightgreen;
+			}
+			.bad {
+				color: red;
+			}
+			#show-cmds-btn {
+				position: fixed;
+				left: 100%;
+				top: 32px;
+				transform: translate(-150%, 0);
+				width: 8%;
+			}
+			#safety-screen {
+				position: fixed;
+				top: 0px;
+				padding-top: 4%;
+				width: 100%;
+				height: 100%;
+				background-color: rgb(25, 25, 25);
+			}
+			a {
+				color: lightblue;
+			}
+			#confirm-child {
+				position: fixed;
+				right: 72px;
+				bottom: 64px;
+			}
+			button:active {
+				background-color: rgb(15, 15, 15);
+			}
+			noscript {
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				background-color: rgb(25, 25, 25);
+				align-content: center;
+				z-index: 1;
+				padding-top: 4%;
+			}
+			.center {
+				text-align: center;
+				align: content: center;
+			}
+			.msg-user-author {
+				color: lightblue;
+			}
+		</style>
+	</head>
+	<body>
+		<noscript>
+			<h1>JavaScript is disabled</h1><br>
+			<p class="center">Sorry, but JavaScript is disabled in your browser settings. Please enable JavaScript and refresh this page.<br><br>Thank you!</p>
+		</noscript>
+		<div id="chat-container">
+			<button id="show-cmds-btn">Get Commands</button>
+			<div id="chat-messages"></div>
+			<form id="msg-form">
+				<input placeholder="Enter message here..." id="msg-box" autocomplete="off">
+			</form>
+			<div id="safety-screen">
+				<h1>Keeping Children Safe</h1>
+				<p><strong>For Parents</strong><br>25yeht Live Chat is not responsible for any unfortunate events. To learn how to keep your child safe on the internet, please click one of these links:<br><br><a href="https://www.justice.gov/coronavirus/keeping-children-safe-online" target="_blank">Keeping Children safe online</a><br><a href="https://abccolumbia.com/2020/02/11/30-acronyms-that-child-predators-use-to-communicate-with-our-kids/" target="_blank">Acronyms that child predators use to communicate with our kids</a><button id="confirm-child">Continue</button></p>
+			</div>
+		</div>
+		<script src="/cdn/lib/socket.io.js"></script>
+		<script type="text/javascript">
+			document.getElementById("confirm-child").addEventListener("click", function() {
+				document.getElementById("confirm-child").remove();
+				document.getElementById("safety-screen").remove();
+				//Main
+				var sock = io();
+
+				var myUsername = null;
+				var versionText = "25yeht Live Chat 1.0.9";
+				var form = document.getElementById("msg-form");
+				var input = document.getElementById("msg-box");
+				var cmdsBtn = document.getElementById("show-cmds-btn");
+				var cmDiv = document.getElementById("chat-messages");
+				try {
+					//Sound effects
+					//Pop
+					var popSfx = new Audio("/cdn/audio/pop.mp3");
+					var pop = popSfx.play;
+					//Join
+					var joinSfx = new Audio("/cdn/audio/join.mp3");
+					input.focus();
+					//FBI OPEN UP!!!
+					var fbiSfx = new Audio("/cdn/audio/fbi-open-up.mp3");
+					var fbiOpenUp = fbiSfx.play;
+
+					//Useful functions
+					function scrBottom(node) {
+						node.scrollTop = node.scrollHeight;
+					}
+					function escHtml(unsafe) {
+						return unsafe
+							.replace(/&/g, "&amp;")
+							.replace(/</g, "&lt;")
+							.replace(/>/g, "&gt;")
+							.replace(/"/g, "&quot;")
+							.replace(/'/g, "&#039;");
+					}
+					//Main
+					cmDiv.innerHTML = "<p style='color: gray;'>" + escHtml(versionText) + "</p>";
+					//Message event
+					sock.on("message", function(msg) {
+						cmDiv.innerHTML += "<br><p class='msg-user-author' style='" + (msg.author == myUsername ? " text-align: right;": "") + "'>" + msg.author + ":</p> <div class='msg' style='" + (msg.author == myUsername ? " text-align: right;": "") + "'>" + escHtml(msg.content).replace(/(https?:\/\/[^\s][^'][^"]+)/g, "<a href='$1' target='_blank'>$1</a>") + "</div>";
+						scrBottom(cmDiv);
+						if(msg.author != myUsername) {
+							pop();
+						}
+					});
+					//User join event
+					sock.on("userJoin", function(user) {
+						cmDiv.innerHTML += "<br><p class='good'>" + user + " has joined the chat!</p>";
+						scrBottom(cmDiv);
+						pop();
+					});
+					//User leave event
+					sock.on("userLeave", function(user) {
+						cmDiv.innerHTML += "<br><p class='bad'>" + user.user + (user.isPedo ? "got kicked out of the chat because he/she is a potential internet predator." : " has left the chat" + ".</p>");
+						scrBottom(cmDiv);
+						pop();
+					});
+					//System message (bad) event
+					sock.on("systemMessageBad", function(msg) {
+						cmDiv.innerHTML += "<br><p style='color: orange;'>System:</p> <div class='msg' style='color: yellow'>" + escHtml(msg).replace(/(https?:\/\/[^\s][^'][^"]+)/g, "<a href='$1' target='_blank'>$1</a>") + "</div>";
+						scrBottom(cmDiv);
+						pop();
+					});
+					//Form submit event
+					form.addEventListener("submit", function(e) {
+						e.preventDefault();
+						if(input.value.toLowerCase() == "$clear") {
+							cmDiv.innerHTML = "<p style='color: gray;'>" + escHtml(versionText) + "</p>";
+							input.value = "";
+						} else if(input.value.toLowerCase() == "$disconnect") {
+							sock.disconnect();
+							cmDiv.innerHTML += "<br><p style='color: orange;'>You have disconnected. You can no longer chat or recieve messages anymore. Refresh the page to be able to chat again.</p>";
+							scrBottom(cmDiv);
+							input.remove();
+						} else if(input.value) {
+							sock.send( input.value.replace(/^(\\\$clear)/gi, "$clear").replace(/\\\$disconnect/gi, "$disconnect"));
+							input.value = "";
+						}
+					});
+					//Get commands button click event
+					cmdsBtn.addEventListener("click", function() {
+						cmDiv.innerHTML += "<br><p style='color: yellow;'><strong>Commands:</strong><br><ul><li>$clear: clears the messages.</li><li>$aswearword# or $zhanghua#: Simulates a swear word.</li><li>$disconnect: Disconnects you from the server.</li></ul></p>";
+						scrBottom(cmDiv);
+					});
+					//Sound effects
+					sock.on("soundEffect")
+					//Server-side give-me-my-name event
+					sock.on("yourNameIs", function(name) {
+						joinSfx.play();
+						myUsername = name;
+						cmDiv.innerHTML += "<br><p class='lightblue'>You have joined as <strong class='lightblue'>" + pescHtml(name) + "</strong>.</p>";
+						scrBottom(cmDiv);
+					});
+					//Server maintainence event
+					sock.on("serverRestart", function() {
+						cmDiv.innerHTML += "<br><p style='color: yellow;'>The server is restarting for maintainence. You will be logged in as a different display name when the server restarts. Thanks for your patience!<br><br>PS: You may need to refresh the page for some updates to apply.</p>";
+						scrBottom(cmDiv);
+						pop();
+					});
+					//Kick out event
+					sock.on("kickOut", function(msg) {
+						cmDiv.innerHTML += "<br><p class='bad'>" + escHtml(msg) + "</p>";
+						scrBottom(cmDiv);
+						input.remove();
+					});
+					//Plain message event
+					sock.on("plainMessage", function(msg) {
+						cmDiv.innerHTMl += "<p style='color: rgb(130, 130, 130);'>" + escHtml(msg) + "</p>";
+					});
+					//FBI prank event
+					sock.on("fbiPrank", fbiOpenUp);
+				} catch(e) {
+					alert("Whoops! There was an error! Message: " + e);
+				}
+			});
+		</script>
+	</body>
+</html>
